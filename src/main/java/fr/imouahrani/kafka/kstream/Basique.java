@@ -31,7 +31,9 @@ public class Basique {
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
 
         final StreamsBuilder builder = new StreamsBuilder();
-        final KStream<String, String> source = builder.stream(INPUT_TOPIC);
+        KStream<String, String> source = builder.stream(INPUT_TOPIC);
+
+        source = source.filter((k,v)->{return v.length()> 5 ? true : false;});
 
         source.to(OUTPUT_TOPIC, Produced.with(Serdes.String(), Serdes.String()));
 
