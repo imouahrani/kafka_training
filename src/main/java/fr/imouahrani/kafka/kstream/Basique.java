@@ -36,7 +36,7 @@ public class Basique {
 
        // source = source.mapValues( v -> {return v.toUpperCase();});
 
-        source = source.flatMap((k,v) -> {
+      /*  source = source.flatMap((k,v) -> {
             // eclatement de notre phrase en fonction du caractere espace
             String[] tokens =  v.split(" ");
             // on construit une liste pour notre valeur de retour
@@ -46,6 +46,10 @@ public class Basique {
                 result.add(new KeyValue<>(k,token));
             }
             return  result;
+        });*/
+
+        source.foreach((k,v) -> {
+            System.out.println(v);
         });
 
         source.to(OUTPUT_TOPIC, Produced.with(Serdes.String(), Serdes.String()));
