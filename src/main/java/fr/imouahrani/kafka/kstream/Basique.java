@@ -13,6 +13,7 @@ import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
 
+import java.util.Locale;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -33,7 +34,9 @@ public class Basique {
         final StreamsBuilder builder = new StreamsBuilder();
         KStream<String, String> source = builder.stream(INPUT_TOPIC);
 
-        source = source.filter((k,v)->{return v.length()> 5 ? true : false;});
+       // source = source.filter((k,v)->{return v.length()> 5 ? true : false;});
+
+        source = source.mapValues( v -> {return v.toUpperCase();});
 
         source.to(OUTPUT_TOPIC, Produced.with(Serdes.String(), Serdes.String()));
 
