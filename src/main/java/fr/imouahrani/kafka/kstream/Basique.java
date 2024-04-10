@@ -13,9 +13,7 @@ import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.Topology;
 
-import java.util.Locale;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 
 public class Basique {
@@ -36,7 +34,19 @@ public class Basique {
 
        // source = source.filter((k,v)->{return v.length()> 5 ? true : false;});
 
-        source = source.mapValues( v -> {return v.toUpperCase();});
+       // source = source.mapValues( v -> {return v.toUpperCase();});
+
+        source = source.flatMap((k,v) -> {
+            // eclatement de notre phrase en fonction du caractere espace
+            String[] tokens =  v.split(" ");
+            // on construit une liste pour notre valeur de retour
+            List<KeyValue<String, String>> result = new ArrayList<>(tokens.length);
+            for (String token : tokens) {
+                // en valeur un mot de la phrase qu'on a split
+                result.add(new KeyValue<>(k,token));
+            }
+            return  result;
+        });
 
         source.to(OUTPUT_TOPIC, Produced.with(Serdes.String(), Serdes.String()));
 
