@@ -1,0 +1,1 @@
+%KAFKA_HOME%\kafka-console-producer.bat --bootstrap-server localhost:9092 --topic string-input --property parse.key=true --property key.separator=,
