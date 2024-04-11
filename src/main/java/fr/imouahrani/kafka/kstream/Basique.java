@@ -6,6 +6,8 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.*;
 
 import org.apache.kafka.streams.kstream.KStream;
+import org.apache.kafka.streams.kstream.KTable;
+import org.apache.kafka.streams.kstream.Materialized;
 import org.apache.kafka.streams.kstream.Produced;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
@@ -18,8 +20,8 @@ import java.util.*;
 
 public class Basique {
 
-    public static final String INPUT_TOPIC = "string-input";
-    public static final String OUTPUT_TOPIC = "string-output";
+    public static final String INPUT_TOPIC = "testTopic";
+    public static final String OUTPUT_TOPIC = "wcTopic";
 
     public static void main(String[] args){
         Properties props = new Properties();
@@ -28,11 +30,17 @@ public class Basique {
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
         props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
         props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        props.put(StreamsConfig.COMMIT_INTERVAL_MS_CONFIG, 1000);
 
-        final StreamsBuilder builder = new StreamsBuilder();
+        StreamsBuilder builder = new StreamsBuilder();
         KStream<String, String> source = builder.stream(INPUT_TOPIC);
 
-       // source = source.filter((k,v)->{return v.length()> 5 ? true : false;});
+        KTable<String, Long> wordCounts=source
+                .flatMapValues(textLine-> Arrays.asList(textLine.split("w")))
+                .groupBy((k,word)->word)
+                .count(Materialized.as("count-store"));
+
+        // source = source.filter((k,v)->{return v.length()> 5 ? true : false;});
 
        // source = source.mapValues( v -> {return v.toUpperCase();});
 
@@ -48,18 +56,15 @@ public class Basique {
             return  result;
         });*/
 
-        source.foreach((k,v) -> {
+       /* source.foreach((k,v) -> {
             System.out.println(v);
         });
 
-        source.to(OUTPUT_TOPIC, Produced.with(Serdes.String(), Serdes.String()));
+        */
+
+        wordCounts.toStream().to(OUTPUT_TOPIC, Produced.with(Serdes.String(), Serdes.Long()));
 
         KafkaStreams kafkaStreams = new KafkaStreams(builder.build(), props);
-
         kafkaStreams.start();
-
-
     }
-
-
 }
