@@ -31,8 +31,8 @@ public class Peek {
 
         source.
                 peek((k,v) -> {
-            System.out.printf("key %s : value %s \n", k, v);
-        });
+                    System.out.printf("key %s : value %s \n", k, v);
+                });
 
         source.to(OUTPUT_TOPIC, Produced.with(Serdes.String(), Serdes.String()));
         KafkaStreams kafkastreams = new KafkaStreams(builder.build(), props);
