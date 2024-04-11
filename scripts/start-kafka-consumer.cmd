@@ -1,0 +1,1 @@
+%KAFKA_HOME%\bin\windows\kafka-console-consumer.bat --topic string-output --from-beginning --bootstrap-server localhost:9092
