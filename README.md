@@ -19,3 +19,8 @@
 ### GRAFANA
 
 ### Remarque : 80 % du temps splunk et AKHQ
+
+## Link
+### https://capgemini.udemy.com/course/apache-kafka-pour-debutant
+### https://capgemini.udemy.com/course/kafka-streams
+
