@@ -9,6 +9,6 @@
 ### peek et externalisation des properties 
 ### ktable
 
-## PROBLEME 
+## PROBLEMES
 ### word account
 
