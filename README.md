@@ -24,3 +24,5 @@
 ### https://capgemini.udemy.com/course/apache-kafka-pour-debutant
 ### https://capgemini.udemy.com/course/kafka-streams
 
+### Michelin doc : https://blogit.michelin.io/dkafka-streams
+
